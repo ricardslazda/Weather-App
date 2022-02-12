@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service\Api;
 
+use App\Service\AbstractCacheService;
+use JetBrains\PhpStorm\Pure;
+use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -11,15 +14,44 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class WeatherReportApiService
+class WeatherReportApiService extends AbstractCacheService
 {
     private const WEATHER_REPORT_PROVIDER_BASE_URL = "https://api.openweathermap.org";
+    private const WEATHER_REDIS_CACHE = "weatherRedisCache";
 
     private HttpClientInterface $client;
 
-    public function __construct(HttpClientInterface $client)
+    #[Pure]
+    public function __construct(HttpClientInterface $client, CacheInterface $cache)
     {
+        parent::__construct($cache);
+
         $this->client = $client;
+    }
+
+    /**
+     * @param float $latitude
+     * @param float $longitude
+     * @return array
+     * @throws ClientExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws TransportExceptionInterface
+     */
+    public function getCurrentWeatherReport(float $latitude, float $longitude): array
+    {
+        $cacheItem = $this->getCacheItem(self::WEATHER_REDIS_CACHE);
+
+        if ($this->isCached($cacheItem)) {
+            return $this->getFromCache($cacheItem);
+        }
+
+        $weatherReport = $this->getLatestCurrentWeatherReport($latitude, $longitude);
+        $cacheItem->set($weatherReport);
+        $this->cache->save($cacheItem);
+
+        return $weatherReport;
     }
 
     /**
@@ -29,7 +61,7 @@ class WeatherReportApiService
      * @throws ClientExceptionInterface
      * @throws DecodingExceptionInterface
      */
-    public function getCurrentWeatherReport(float $latitude, float $longitude): array
+    public function getLatestCurrentWeatherReport(float $latitude, float $longitude): array
     {
         $accessKey = $_SERVER['WEATHER_REPORT_PROVIDER_ACCESS_KEY'];
 

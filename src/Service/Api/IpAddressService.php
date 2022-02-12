@@ -4,31 +4,23 @@ declare(strict_types=1);
 
 namespace App\Service\Api;
 
-use Psr\Cache\CacheItemInterface;
+use App\Service\AbstractCacheService;
 use Psr\Cache\InvalidArgumentException;
-use Symfony\Contracts\Cache\CacheInterface;
 
-class IpAddressService
+class IpAddressService extends AbstractCacheService
 {
     private const IP_PROVIDER_URL = "http://checkip.dyndns.com";
     private const IP_REDIS_CACHE_KEY = "ipRedisCache";
-
-    private CacheInterface $cache;
-
-    public function __construct(CacheInterface $locationServiceCache)
-    {
-        $this->cache = $locationServiceCache;
-    }
 
     /**
      * @throws InvalidArgumentException
      */
     public function getIpAddress(): ?string
     {
-        $cacheItem = $this->getCacheItem();
+        $cacheItem = $this->getCacheItem(self::IP_REDIS_CACHE_KEY);
 
-        if ($this->isIpAddressCached($cacheItem)) {
-            return $this->getIpAddressFromCache($cacheItem);
+        if ($this->isCached($cacheItem)) {
+            return $this->getFromCache($cacheItem);
         }
 
         $ipAddress = $this->getLatestIpAddress();
@@ -44,23 +36,5 @@ class IpAddressService
         preg_match('/Current IP Address: \[?([:.0-9a-fA-F]+)?/', $externalContent, $matches);
 
         return $matches[1];
-    }
-
-    private function getIpAddressFromCache(CacheItemInterface $cacheItem): ?string
-    {
-        return $cacheItem->get() ?? null;
-    }
-
-    /**
-     * @throws InvalidArgumentException
-     */
-    private function getCacheItem(): CacheItemInterface
-    {
-        return $this->cache->getItem(self::IP_REDIS_CACHE_KEY);
-    }
-
-    private function isIpAddressCached(CacheItemInterface $cacheItem): bool
-    {
-        return (bool)$this->getIpAddressFromCache($cacheItem);
     }
 }

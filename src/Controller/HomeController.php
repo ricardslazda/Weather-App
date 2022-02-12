@@ -31,6 +31,6 @@ class HomeController extends AbstractController
      */
     public function index(HomeRequestService $requestService): Response
     {
-        return $this->render('base.html.twig', $requestService->processIndexGetRequest());
+        return $this->render('index.html.twig', $requestService->processIndexGetRequest());
     }
 }

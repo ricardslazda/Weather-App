@@ -1,6 +1,5 @@
 import './styles/app.css';
-
 import { createApp } from 'vue'
-import Home from "./components/home";
+import App from "./components/App";
 
-const app = createApp(Home).mount('#app')
+createApp(App).mount('#app')
