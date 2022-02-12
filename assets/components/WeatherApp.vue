@@ -29,12 +29,21 @@
           </div>
         </div>
       </div>
+      <div class="weather-app__refresh-container">
+        <button :class="['weather-app__refresh-button', {'weather-app__refresh-button--disabled': isRefreshDisabled}]"
+                @click="onRefresh">
+          Refresh
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import {useToast} from "vue-toastification";
+
 const ABSOLUTE_ZERO_TEMPERATURE = 273.15
+
 export default {
   name: "WeatherApp",
   props: {
@@ -44,6 +53,15 @@ export default {
     weatherReport: {
       type: Object,
     }
+  },
+  data() {
+    return {
+      isRefreshDisabled: false
+    }
+  },
+  setup() {
+    const toast = useToast();
+    return {toast}
   },
   computed: {
     fullLocationText() {
@@ -59,6 +77,22 @@ export default {
     },
     getWeatherIconUrl(iconCode) {
       return `https://openweathermap.org/img/wn/${iconCode}@4x.png`;
+    },
+    onRefresh() {
+      if (this.isRefreshDisabled) {
+        return;
+      }
+
+      this.isRefreshDisabled = true;
+      this.toast.success("Refreshed!", {
+        timeout: 900,
+        hideProgressBar: true,
+        closeButton: false
+      })
+
+      setTimeout(() => {
+        this.isRefreshDisabled = false;
+      }, 1000);
     }
   }
 }
@@ -85,7 +119,7 @@ $primary-color: #4AB9F9;
   }
 
   &__content {
-    height: 85%;
+    height: 70%;
   }
 
   &__bottom {
@@ -128,6 +162,32 @@ $primary-color: #4AB9F9;
 
   &__location-container {
     margin-top: 10px;
+  }
+
+  &__refresh {
+    &-container {
+      height: 15%;
+      display: flex;
+      align-items: center;
+      justify-content: end;
+      margin-right: 28px;
+    }
+
+    &-button {
+      background-color: $primary-color;
+      color: white;
+      border: none;
+      cursor: pointer;
+      outline: none;
+      box-shadow: none;
+      padding: 6px 12px;
+
+      &--disabled {
+        background: gainsboro;
+        cursor: auto;
+      }
+    }
+
   }
 }
 
