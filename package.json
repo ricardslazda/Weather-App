@@ -16,6 +16,8 @@
         "build": "encore production --progress"
     },
     "dependencies": {
+        "sass": "^1.49.7",
+        "sass-loader": "^12.4.0",
         "vue": "^3.2.30",
         "vue-loader": "^17.0.0",
         "vue-template-compiler": "^2.6.14"

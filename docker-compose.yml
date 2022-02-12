@@ -2,6 +2,7 @@ version: '3.9'
 
 services:
   db:
+    container_name: container_postgres
     image: postgres:14.1
     environment:
       - POSTGRES_USER=postgres
@@ -10,15 +11,34 @@ services:
       - '5432:5432'
     volumes:
       - db:/var/lib/postgresql/data
+    networks:
+      - app-network
   web:
-    build: docker/web
+    container_name: container_app
+    build:
+      context: .
+      dockerfile: docker/web/Dockerfile
     ports:
-      - 8080:80
+      - "8080:80"
     volumes:
       - .:/var/www
     depends_on:
       - db
-
+    networks:
+      - app-network
+  redis:
+    container_name: container_redis
+    image: redis:4.0
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
 volumes:
   db:
     driver: local
+  redis:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge

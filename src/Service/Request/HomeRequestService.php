@@ -2,10 +2,11 @@
 
 namespace App\Service\Request;
 
-use App\Service\Api\IpAddressApiService;
+use App\Service\Api\IpAddressService;
 use App\Service\Api\LocationApiService;
 use App\Service\Api\WeatherReportApiService;
 use JetBrains\PhpStorm\ArrayShape;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -14,18 +15,18 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class HomeRequestService
 {
-    private LocationApiService $locationApiService;
-    private WeatherReportApiService $weatherReportApiService;
-    private IpAddressApiService $ipAddressApiService;
+    private LocationApiService $locationService;
+    private WeatherReportApiService $weatherReportService;
+    private IpAddressService $ipAddressService;
 
     public function __construct(
-        LocationApiService $locationApiService,
-        WeatherReportApiService $weatherReportApiService,
-        IpAddressApiService $ipAddressApiService
+        LocationApiService $locationService,
+        WeatherReportApiService $weatherReportService,
+        IpAddressService $ipAddressService
     ) {
-        $this->locationApiService = $locationApiService;
-        $this->weatherReportApiService = $weatherReportApiService;
-        $this->ipAddressApiService = $ipAddressApiService;
+        $this->locationService = $locationService;
+        $this->weatherReportService = $weatherReportService;
+        $this->ipAddressService = $ipAddressService;
     }
 
     /**
@@ -34,13 +35,14 @@ class HomeRequestService
      * @throws RedirectionExceptionInterface
      * @throws ClientExceptionInterface
      * @throws DecodingExceptionInterface
+     * @throws InvalidArgumentException
      */
-    #[ArrayShape(['location' => "array", 'weatherReport' => "string"])]
-    public function processIndex(): array
+    #[ArrayShape(['location' => "array", 'weatherReport' => "array"])]
+    public function processIndexGetRequest(): array
     {
-        $ipAddress = $this->ipAddressApiService->getIpAddress();
-        $location = $this->locationApiService->getLocationByIp($ipAddress);
-        $weatherReport = $this->weatherReportApiService->getCurrentWeatherReport($location['latitude'], $location['longitude']);
+        $ipAddress = $this->ipAddressService->getIpAddress();
+        $location = $this->locationService->getLocationByIp($ipAddress);
+        $weatherReport = $this->weatherReportService->getCurrentWeatherReport($location['latitude'] ?? 0, $location['longitude'] ?? 0);
 
         return [
             'location' => $location,

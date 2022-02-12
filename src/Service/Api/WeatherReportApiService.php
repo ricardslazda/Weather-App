@@ -13,7 +13,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class WeatherReportApiService
 {
-    private const WEATHER_REPORT_PROVIDER_BASE_URL = "https://api.openweathermap.org/";
+    private const WEATHER_REPORT_PROVIDER_BASE_URL = "https://api.openweathermap.org";
 
     private HttpClientInterface $client;
 
