@@ -6,11 +6,19 @@
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
     {% endblock %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/f68478b5f2.js" crossorigin="anonymous"></script>
 </head>
 <body>
 {% block body %}{% endblock %}
 {% block javascripts %}
     {{ encore_entry_script_tags('app') }}
+    <script>
+        window.sessionStorage.setItem('location', JSON.stringify({{ location | json_encode | raw }}))
+        window.sessionStorage.setItem('weatherReport', JSON.stringify({{ weatherReport | json_encode | raw }}))
+    </script>
 {% endblock %}
 </body>
 </html>
