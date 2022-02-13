@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Service\Request\HomeRequestService;
-use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -27,7 +26,6 @@ class HomeController extends AbstractController
      * @throws RedirectionExceptionInterface
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
-     * @throws InvalidArgumentException
      */
     public function index(HomeRequestService $requestService): Response
     {
@@ -39,7 +37,6 @@ class HomeController extends AbstractController
      *
      * @throws TransportExceptionInterface
      * @throws ServerExceptionInterface
-     * @throws InvalidArgumentException
      * @throws RedirectionExceptionInterface
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface

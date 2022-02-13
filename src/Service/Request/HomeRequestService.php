@@ -6,7 +6,6 @@ use App\Service\Api\IpAddressService;
 use App\Service\Api\LocationApiService;
 use App\Service\Api\WeatherReportApiService;
 use JetBrains\PhpStorm\ArrayShape;
-use Psr\Cache\InvalidArgumentException;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -20,9 +19,9 @@ class HomeRequestService
     private IpAddressService $ipAddressService;
 
     public function __construct(
-        LocationApiService      $locationService,
+        LocationApiService $locationService,
         WeatherReportApiService $weatherReportService,
-        IpAddressService        $ipAddressService
+        IpAddressService $ipAddressService
     )
     {
         $this->locationService = $locationService;
@@ -36,7 +35,6 @@ class HomeRequestService
      * @throws RedirectionExceptionInterface
      * @throws ClientExceptionInterface
      * @throws DecodingExceptionInterface
-     * @throws InvalidArgumentException
      */
     #[ArrayShape(['location' => "array", 'weatherReport' => "array"])]
     public function processIndexGetRequest(): array
@@ -55,7 +53,6 @@ class HomeRequestService
     }
 
     /**
-     * @throws InvalidArgumentException
      * @throws RedirectionExceptionInterface
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface

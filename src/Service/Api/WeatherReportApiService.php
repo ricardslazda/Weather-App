@@ -6,7 +6,6 @@ namespace App\Service\Api;
 
 use App\Service\AbstractCacheService;
 use JetBrains\PhpStorm\Pure;
-use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -22,9 +21,9 @@ class WeatherReportApiService extends AbstractCacheService
     private HttpClientInterface $client;
 
     #[Pure]
-    public function __construct(HttpClientInterface $client, CacheInterface $cache)
+    public function __construct(HttpClientInterface $client)
     {
-        parent::__construct($cache);
+        parent::__construct();
 
         $this->client = $client;
     }
