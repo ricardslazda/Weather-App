@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Service\Api;
 
 use App\Service\AbstractCacheService;
-use Psr\Cache\InvalidArgumentException;
 
 class IpAddressService extends AbstractCacheService
 {
@@ -13,7 +12,8 @@ class IpAddressService extends AbstractCacheService
     private const IP_REDIS_CACHE_KEY = "ipRedisCache";
 
     /**
-     * @throws InvalidArgumentException
+     * @param bool $shouldGetFromCache
+     * @return string|null
      */
     public function getIpAddress(bool $shouldGetFromCache = true): ?string
     {

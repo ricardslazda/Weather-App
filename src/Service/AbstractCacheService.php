@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace App\Service;
 
 use Psr\Cache\CacheItemInterface;
-use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Component\Cache\Adapter\RedisAdapter;
 
 abstract class AbstractCacheService
 {
-    protected CacheInterface $cache;
+    protected RedisAdapter $cache;
 
-    public function __construct(CacheInterface $cache)
+    public function __construct()
     {
-        $this->cache = $cache;
+        $this->cache = new RedisAdapter(RedisAdapter::createConnection($_SERVER['REDIS_URL']));
     }
 
     protected final function getFromCache(CacheItemInterface $cacheItem): mixed
