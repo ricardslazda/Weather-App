@@ -20,10 +20,11 @@ class HomeRequestService
     private IpAddressService $ipAddressService;
 
     public function __construct(
-        LocationApiService $locationService,
+        LocationApiService      $locationService,
         WeatherReportApiService $weatherReportService,
-        IpAddressService $ipAddressService
-    ) {
+        IpAddressService        $ipAddressService
+    )
+    {
         $this->locationService = $locationService;
         $this->weatherReportService = $weatherReportService;
         $this->ipAddressService = $ipAddressService;
@@ -42,7 +43,35 @@ class HomeRequestService
     {
         $ipAddress = $this->ipAddressService->getIpAddress();
         $location = $this->locationService->getLocationByIp($ipAddress);
-        $weatherReport = $this->weatherReportService->getCurrentWeatherReport($location['latitude'] ?? 0, $location['longitude'] ?? 0);
+        $weatherReport = $this->weatherReportService->getCurrentWeatherReport(
+            $location['latitude'] ?? 0,
+            $location['longitude'] ?? 0
+        );
+
+        return [
+            'location' => $location,
+            'weatherReport' => $weatherReport,
+        ];
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     */
+    #[ArrayShape(['location' => "array", 'weatherReport' => "array"])]
+    public function processRefreshPostRequest(): array
+    {
+        $ipAddress = $this->ipAddressService->getIpAddress(false);
+        $location = $this->locationService->getLocationByIp($ipAddress, false);
+        $weatherReport = $this->weatherReportService->getCurrentWeatherReport(
+            $location['latitude'] ?? 0,
+            $location['longitude'] ?? 0,
+            false
+        );
 
         return [
             'location' => $location,

@@ -32,6 +32,7 @@ class WeatherReportApiService extends AbstractCacheService
     /**
      * @param float $latitude
      * @param float $longitude
+     * @param bool $shouldGetFromCache
      * @return array
      * @throws ClientExceptionInterface
      * @throws DecodingExceptionInterface
@@ -39,12 +40,14 @@ class WeatherReportApiService extends AbstractCacheService
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
      */
-    public function getCurrentWeatherReport(float $latitude, float $longitude): array
+    public function getCurrentWeatherReport(float $latitude, float $longitude, bool $shouldGetFromCache = true): array
     {
         $cacheItem = $this->getCacheItem(self::WEATHER_REDIS_CACHE);
 
-        if ($this->isCached($cacheItem)) {
-            return $this->getFromCache($cacheItem);
+        if ($shouldGetFromCache) {
+            if ($this->isCached($cacheItem)) {
+                return $this->getFromCache($cacheItem);
+            }
         }
 
         $weatherReport = $this->getLatestCurrentWeatherReport($latitude, $longitude);

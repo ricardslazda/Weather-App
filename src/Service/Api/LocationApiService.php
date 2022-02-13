@@ -31,6 +31,7 @@ class LocationApiService extends AbstractCacheService
 
     /**
      * @param string $ipAddress
+     * @param bool $shouldGetFromCache
      * @return array
      * @throws ClientExceptionInterface
      * @throws DecodingExceptionInterface
@@ -38,12 +39,14 @@ class LocationApiService extends AbstractCacheService
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
      */
-    public function getLocationByIp(string $ipAddress): array
+    public function getLocationByIp(string $ipAddress, bool $shouldGetFromCache = true): array
     {
         $cacheItem = $this->getCacheItem(self::LOCATION_REDIS_CACHE_KEY);
 
-        if ($this->isCached($cacheItem)) {
-            return $this->getFromCache($cacheItem);
+        if ($shouldGetFromCache) {
+            if ($this->isCached($cacheItem)) {
+                return $this->getFromCache($cacheItem);
+            }
         }
 
         $location = $this->getLatestLocationByIp($ipAddress);

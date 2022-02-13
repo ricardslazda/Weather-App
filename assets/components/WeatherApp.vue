@@ -9,22 +9,22 @@
       <hr class="line"/>
       <div class="weather-app__content">
         <div class="weather-app__icon-container">
-          <img :src="getWeatherIconUrl(weatherReport.weather[0]['icon'])" alt="Weather Image">
+          <img :src="getWeatherIconUrl(weatherReportData.weather[0]['icon'])" alt="Weather Image">
         </div>
         <div class="weather-app__information">
           <div class="flex-container">
             <p class="weather-app__temperature-text">
-              {{ convertKelvinToCelsius(weatherReport.main['temp']) }}°c
+              {{ convertKelvinToCelsius(weatherReportData.main['temp']) }}°c
             </p>
           </div>
           <div class="flex-container">
             <p class="weather-app__weather-text">
-              {{ capitalizeFirstLetter(weatherReport.weather[0]['description']) }}
+              {{ capitalizeFirstLetter(weatherReportData.weather[0]['description']) }}
             </p>
           </div>
           <div class="flex-container weather-app__location-container">
             <p>
-              {{ `${location.location['country_flag_emoji']} ${fullLocationText}` }}
+              {{ `${locationData.location['country_flag_emoji']} ${fullLocationText}` }}
             </p>
           </div>
         </div>
@@ -41,6 +41,8 @@
 
 <script>
 import {useToast} from "vue-toastification";
+import weatherReportRepository from "../repositories/weather-report.repository";
+import _ from 'lodash';
 
 const ABSOLUTE_ZERO_TEMPERATURE = 273.15
 
@@ -56,7 +58,9 @@ export default {
   },
   data() {
     return {
-      isRefreshDisabled: false
+      isRefreshDisabled: false,
+      locationData: _.cloneDeep(this.location),
+      weatherReportData: _.cloneDeep(this.weatherReport)
     }
   },
   setup() {
@@ -84,15 +88,19 @@ export default {
       }
 
       this.isRefreshDisabled = true;
-      this.toast.success("Refreshed!", {
-        timeout: 900,
-        hideProgressBar: true,
-        closeButton: false
-      })
-
-      setTimeout(() => {
-        this.isRefreshDisabled = false;
-      }, 1000);
+      weatherReportRepository.getFreshData()
+          .then(response => {
+            this.locationData = response.data.location;
+            this.weatherReportData = response.data.weatherReport;
+          })
+          .then(() => {
+            this.toast.success("Refreshed!", {
+              timeout: 900,
+              hideProgressBar: true,
+              closeButton: false
+            });
+            this.isRefreshDisabled = false;
+          });
     }
   }
 }

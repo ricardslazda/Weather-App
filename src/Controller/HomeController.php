@@ -33,4 +33,19 @@ class HomeController extends AbstractController
     {
         return $this->render('index.html.twig', $requestService->processIndexGetRequest());
     }
+
+    /**
+     * @Route("/refresh", methods={"GET"})
+     *
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws InvalidArgumentException
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     */
+    public function refresh(HomeRequestService $requestService): Response
+    {
+        return $this->json($requestService->processRefreshPostRequest());
+    }
 }

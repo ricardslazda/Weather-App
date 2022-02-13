@@ -15,12 +15,14 @@ class IpAddressService extends AbstractCacheService
     /**
      * @throws InvalidArgumentException
      */
-    public function getIpAddress(): ?string
+    public function getIpAddress(bool $shouldGetFromCache = true): ?string
     {
         $cacheItem = $this->getCacheItem(self::IP_REDIS_CACHE_KEY);
 
-        if ($this->isCached($cacheItem)) {
-            return $this->getFromCache($cacheItem);
+        if ($shouldGetFromCache) {
+            if ($this->isCached($cacheItem)) {
+                return $this->getFromCache($cacheItem);
+            }
         }
 
         $ipAddress = $this->getLatestIpAddress();
