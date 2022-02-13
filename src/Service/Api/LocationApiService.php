@@ -15,7 +15,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class LocationApiService extends AbstractCacheService
 {
-    private const LOCATION_PROVIDER_BASE_URL = "http://api.ipstack.com";
     private const LOCATION_REDIS_CACHE_KEY = "locationRedisCache";
 
     private HttpClientInterface $client;
@@ -65,10 +64,11 @@ class LocationApiService extends AbstractCacheService
     public function getLatestLocationByIp(string $ipAddress): array
     {
         $accessKey = $_SERVER['LOCATION_PROVIDER_ACCESS_KEY'];
+        $url = $_SERVER['LOCATION_PROVIDER_URL'];
 
         $response = $this->client->request(
             'GET',
-            sprintf("%s/%s?access_key=%s", self::LOCATION_PROVIDER_BASE_URL, $ipAddress, $accessKey)
+            sprintf("%s/%s?access_key=%s", $url, $ipAddress, $accessKey)
         );
 
         return $response->toArray();

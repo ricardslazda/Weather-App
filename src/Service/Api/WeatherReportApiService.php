@@ -15,7 +15,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class WeatherReportApiService extends AbstractCacheService
 {
-    private const WEATHER_REPORT_PROVIDER_BASE_URL = "https://api.openweathermap.org";
     private const WEATHER_REDIS_CACHE = "weatherRedisCache";
 
     private HttpClientInterface $client;
@@ -66,10 +65,11 @@ class WeatherReportApiService extends AbstractCacheService
     public function getLatestCurrentWeatherReport(float $latitude, float $longitude): array
     {
         $accessKey = $_SERVER['WEATHER_REPORT_PROVIDER_ACCESS_KEY'];
+        $url = $_SERVER['WEATHER_REPORT_PROVIDER_URL'];
 
         $response = $this->client->request(
             'GET',
-            sprintf("%s/data/2.5/weather?lat=%d&lon=%d&appid=%s", self::WEATHER_REPORT_PROVIDER_BASE_URL, $latitude, $longitude, $accessKey)
+            sprintf("%s/data/2.5/weather?lat=%d&lon=%d&appid=%s", $url, $latitude, $longitude, $accessKey)
         );
 
         return $response->toArray();
