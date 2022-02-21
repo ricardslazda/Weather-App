@@ -46,10 +46,10 @@ Simple Weather App which retrieves your IP address, Location and Weather Report 
 
    ```sh
    LOCATION_PROVIDER_URL=http://api.ipstack.com
-   LOCATION_PROVIDER_ACCESS_KEY={Your_Key}
+   LOCATION_PROVIDER_ACCESS_KEY={Your_Key} <- or you can use mine ->  ad5826ce84bf2d3946f90efa34f1c37b
    
    WEATHER_REPORT_PROVIDER_URL=https://api.openweathermap.org
-   WEATHER_REPORT_PROVIDER_ACCESS_KEY={Your_Key}
+   WEATHER_REPORT_PROVIDER_ACCESS_KEY={Your_Key} <- or you can use mine ->  75644221927cf43372e9901b8ab3fce1
    ```   
  
 6. Start docker-compose
