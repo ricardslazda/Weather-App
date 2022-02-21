@@ -5,7 +5,6 @@ namespace App\Service\Request;
 use App\Service\Api\IpAddressService;
 use App\Service\Api\LocationApiService;
 use App\Service\Api\WeatherReportApiService;
-use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -36,7 +35,6 @@ class HomeRequestService
      * @throws ClientExceptionInterface
      * @throws DecodingExceptionInterface
      */
-    #[ArrayShape(['location' => "array", 'weatherReport' => "array"])]
     public function processIndexGetRequest(): array
     {
         $ipAddress = $this->ipAddressService->getIpAddress();
@@ -59,7 +57,6 @@ class HomeRequestService
      * @throws TransportExceptionInterface
      * @throws ServerExceptionInterface
      */
-    #[ArrayShape(['location' => "array", 'weatherReport' => "array"])]
     public function processRefreshGetRequest(): array
     {
         $ipAddress = $this->ipAddressService->getIpAddress(false);
