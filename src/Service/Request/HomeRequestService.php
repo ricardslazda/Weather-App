@@ -60,7 +60,7 @@ class HomeRequestService
      * @throws ServerExceptionInterface
      */
     #[ArrayShape(['location' => "array", 'weatherReport' => "array"])]
-    public function processRefreshPostRequest(): array
+    public function processRefreshGetRequest(): array
     {
         $ipAddress = $this->ipAddressService->getIpAddress(false);
         $location = $this->locationService->getLocationByIp($ipAddress, false);

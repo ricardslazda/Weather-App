@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Service\Api;
 
 use App\Service\AbstractCacheService;
-use JetBrains\PhpStorm\Pure;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -19,7 +18,6 @@ class LocationApiService extends AbstractCacheService
 
     private HttpClientInterface $client;
 
-    #[Pure]
     public function __construct(HttpClientInterface $client)
     {
         parent::__construct();
@@ -61,7 +59,7 @@ class LocationApiService extends AbstractCacheService
      * @throws ClientExceptionInterface
      * @throws DecodingExceptionInterface
      */
-    public function getLatestLocationByIp(string $ipAddress): array
+    private function getLatestLocationByIp(string $ipAddress): array
     {
         $accessKey = $_SERVER['LOCATION_PROVIDER_ACCESS_KEY'];
         $url = $_SERVER['LOCATION_PROVIDER_URL'];

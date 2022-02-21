@@ -43,6 +43,6 @@ class HomeController extends AbstractController
      */
     public function refresh(HomeRequestService $requestService): Response
     {
-        return $this->json($requestService->processRefreshPostRequest());
+        return $this->json($requestService->processRefreshGetRequest());
     }
 }

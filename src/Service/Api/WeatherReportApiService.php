@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Service\Api;
 
 use App\Service\AbstractCacheService;
-use JetBrains\PhpStorm\Pure;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -19,7 +18,6 @@ class WeatherReportApiService extends AbstractCacheService
 
     private HttpClientInterface $client;
 
-    #[Pure]
     public function __construct(HttpClientInterface $client)
     {
         parent::__construct();
@@ -62,7 +60,7 @@ class WeatherReportApiService extends AbstractCacheService
      * @throws ClientExceptionInterface
      * @throws DecodingExceptionInterface
      */
-    public function getLatestCurrentWeatherReport(float $latitude, float $longitude): array
+    private function getLatestCurrentWeatherReport(float $latitude, float $longitude): array
     {
         $accessKey = $_SERVER['WEATHER_REPORT_PROVIDER_ACCESS_KEY'];
         $url = $_SERVER['WEATHER_REPORT_PROVIDER_URL'];
